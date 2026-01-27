@@ -92,3 +92,22 @@ model.fit(x, labels)
 @app.route('/')
 def home():
     return render_template('index.html')
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    symptoms = request.form.get("symptoms").lower()
+    vect = vectorier.transform([symptoms])
+    disease = model.predict(vect)[0]
+
+    info = medicine_advice.get(disease, {})
+    return jsonify({
+        "condition": disease,
+        "medicines": info.get("medicines", []),
+        "dose": info.get("dose", ""),
+        "time": info.get("time", ""),
+        "disclaimer": "This is a basic AI model and may not be accurate for all cases. Please consult a healthcare professional for proper diagnosis and treatment."
+    })
+
+# Run the Application
+if __name__ == '__main__':
+    app.run(debug=True)
