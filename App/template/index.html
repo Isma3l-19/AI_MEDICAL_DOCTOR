@@ -39,7 +39,17 @@
                 headers: {"Content-Type": "application/x-www-form-urlencoded"},
                 body: new URLSearchParams({symptoms})
             });
-        }
+
+            const data = await res.json();
+
+            document.getElementById("result").innerHTML = `
+                <p class="text-xl font-bold">Possible Condition: ${data.condition}</p>
+                <p><b>Medicines:</b> ${data.medicines.join(", ")}</p>
+                <p><b>Dosage:</b> ${data.dose}</p>
+                <p><b>Timing:</b> ${data.timing}</p>
+                <p class="text-sm text-red-600 mt-3">${data.disclaimer}</p>
+            `;
+        };
     </script>
 </body>
 </html>
